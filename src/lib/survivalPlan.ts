@@ -46,7 +46,10 @@ export function generateSurvivalPlan(
   sections.push(`EXECUTIVE SUMMARY`)
   sections.push(`-----------------`)
   sections.push(`Overall Readiness: ${readinessLevel} (${total}/100)`)
-  sections.push(`Estimated Survival Window: ${waterDays > 0 || foodDays > 0 ? Math.min(waterDays || foodDays, foodDays || waterDays) : 3} days (current stores)`)
+  const estDays = waterDays > 0 || foodDays > 0
+    ? Math.min(waterDays > 0 ? waterDays : Infinity, foodDays > 0 ? foodDays : Infinity)
+    : 3
+  sections.push(`Estimated Survival Window: ${estDays} days (current stores)`)
   sections.push(`Location: ${country}`)
   sections.push(`Household Size: ${members} ${members === 1 ? 'person' : 'people'}`)
   sections.push(``)

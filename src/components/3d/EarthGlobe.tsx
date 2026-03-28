@@ -42,15 +42,9 @@ function ConflictDot({ lat, lon }: { lat: number; lon: number }) {
   )
 }
 
-function Globe() {
+function GlobeWithTexture() {
   const meshRef = useRef<THREE.Mesh>(null)
-  let texture: THREE.Texture | undefined
-  try {
-    // eslint-disable-next-line react-hooks/rules-of-hooks
-    texture = useLoader(TextureLoader, 'https://unpkg.com/three-globe/example/img/earth-dark.jpg')
-  } catch {
-    texture = undefined
-  }
+  const texture = useLoader(TextureLoader, 'https://unpkg.com/three-globe/example/img/earth-dark.jpg')
 
   useFrame((_, delta) => {
     if (meshRef.current) meshRef.current.rotation.y += delta * 0.1
@@ -60,11 +54,7 @@ function Globe() {
     <>
       <mesh ref={meshRef}>
         <sphereGeometry args={[1, 64, 64]} />
-        {texture ? (
-          <meshStandardMaterial map={texture} />
-        ) : (
-          <meshStandardMaterial color="#1a2a3a" wireframe />
-        )}
+        <meshStandardMaterial map={texture} />
       </mesh>
       <mesh>
         <sphereGeometry args={[1.03, 32, 32]} />
@@ -75,10 +65,20 @@ function Globe() {
           side={THREE.FrontSide}
         />
       </mesh>
-      {CONFLICT_ZONES.map((z, i) => (
-        <ConflictDot key={i} lat={z.lat} lon={z.lon} />
-      ))}
     </>
+  )
+}
+
+function GlobeFallback() {
+  const meshRef = useRef<THREE.Mesh>(null)
+  useFrame((_, delta) => {
+    if (meshRef.current) meshRef.current.rotation.y += delta * 0.1
+  })
+  return (
+    <mesh ref={meshRef}>
+      <sphereGeometry args={[1, 32, 32]} />
+      <meshStandardMaterial color="#1a2a3a" wireframe />
+    </mesh>
   )
 }
 
@@ -88,8 +88,11 @@ export function EarthGlobe() {
       <ambientLight intensity={0.3} />
       <pointLight position={[5, 3, 5]} intensity={1.5} color="#c8a84b" />
       <pointLight position={[-5, -3, -5]} intensity={0.3} color="#4488ff" />
-      <React.Suspense fallback={null}>
-        <Globe />
+      <React.Suspense fallback={<GlobeFallback />}>
+        <GlobeWithTexture />
+        {CONFLICT_ZONES.map((z, i) => (
+          <ConflictDot key={i} lat={z.lat} lon={z.lon} />
+        ))}
       </React.Suspense>
       <OrbitControls enableZoom={false} autoRotate={false} enableDamping dampingFactor={0.05} />
     </Canvas>
