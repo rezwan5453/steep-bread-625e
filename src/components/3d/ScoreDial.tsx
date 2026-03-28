@@ -89,7 +89,7 @@ function DialScene({ score }: { score: number }) {
 export function ScoreDial({ score }: { score: number }) {
   return (
     <div style={{ width: '100%', height: 280 }}>
-      <Canvas camera={{ position: [0, 0, 3.5], fov: 45 }} dpr={[1, 2]} frameloop="demand">
+      <Canvas camera={{ position: [0, 0, 3.5], fov: 45 }} dpr={[1, 2]} frameloop="always">
         <DialScene score={score} />
       </Canvas>
     </div>

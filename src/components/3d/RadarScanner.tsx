@@ -65,7 +65,7 @@ function BlinkDot({ x, y, phase }: { x: number; y: number; phase: number }) {
 export function RadarScanner() {
   return (
     <div style={{ position: 'fixed', inset: 0, zIndex: 0, pointerEvents: 'none', opacity: 0.12 }}>
-      <Canvas camera={{ position: [0, 0, 5], fov: 60 }} frameloop="demand" dpr={[1, 1.5]}>
+      <Canvas camera={{ position: [0, 0, 5], fov: 60 }} frameloop="always" dpr={[1, 1.5]}>
         <RadarScene />
       </Canvas>
     </div>
